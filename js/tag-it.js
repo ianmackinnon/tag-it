@@ -74,9 +74,13 @@
 
 
             // Event callbacks.
-            onTagAdded  : null,
-            onTagRemoved: null,
-            onTagClicked: null
+            onTagAdded        : null,
+            onTagAddedBefore  : null,
+            onTagAddedAfter   : null,
+            onTagRemoved      : null,
+            onTagRemovedBefore: null,
+            onTagRemovedAfter : null,
+            onTagClicked      : null
         },
 
 
@@ -334,6 +338,9 @@
             tag.append(removeTag);
 
             // Unless options.singleField is set, each tag has a hidden input field inline.
+
+            this._trigger('onTagAddedBefore', null, tag);
+
             if (this.options.singleField) {
                 var tags = this.assignedTags();
                 tags.push(value);
@@ -344,6 +351,7 @@
             }
 
             this._trigger('onTagAdded', null, tag);
+            this._trigger('onTagAddedAfter', null, tag);
 
             // Cleaning the input.
             this._tagInput.val('');
@@ -358,6 +366,7 @@
             tag = $(tag);
 
             this._trigger('onTagRemoved', null, tag);
+            this._trigger('onTagRemovedBefore', null, tag);
 
             if (this.options.singleField) {
                 var tags = this.assignedTags();
@@ -367,6 +376,9 @@
                 });
                 this._updateSingleTagsField(tags);
             }
+
+            this._trigger('onTagRemovedAfter', null, tag);
+
             // Animate the removal.
             if (animate) {
                 tag.fadeOut('fast').hide('blind', {direction: 'horizontal'}, 'fast', function(){
